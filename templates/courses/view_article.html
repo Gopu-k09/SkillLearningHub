@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+<title>{{ article.title }}</title>
+{% block content %}
+<div class="row">
+    <h1>{{ article.title }}</h1>
+    <p>{{ article.content }}</p>
+    
+    {% if article.pdf %}
+        <a href="{{ article.pdf.url }}" download>Download PDF</a>
+    {% else %}
+        <p>No PDF available for this article.</p>
+    {% endif %}
+    
+    <a href="{% url 'home' %}">Back to home</a>
+</div>
+{% endblock %}

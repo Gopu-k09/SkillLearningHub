@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>PDF Documents</h2>
+<div class="row">
+    {% for pdf in pdfs %}
+        <div class="col-md-4">
+            <div class="card mb-4 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pdf.title }}</h5>
+                    {% if pdf.is_premium %}
+                        {% if user.userprofile.is_premium %}
+                            <a href="{{ pdf.pdf_file.url }}" class="btn btn-primary">Download PDF</a>
+                        {% else %}
+                            <a href="{% url 'apply_coupon' %}" class="btn btn-warning">Upgrade for Access</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{{ pdf.pdf_file.url }}" class="btn btn-primary">Download PDF</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

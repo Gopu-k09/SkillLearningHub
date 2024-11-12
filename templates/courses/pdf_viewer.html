@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>{{ pdf.title }}</h2>
+    
+ 
+    <div id="pdf-container" style="width: 80%; max-width: 600px; margin: 0 auto;">
+     
+        <canvas id="pdf-canvas" style="width: 100%; height: auto;"></canvas>
+    </div>
+
+
+    <div id="pdf-controls" class="d-flex justify-content-between align-items-center mb-5">
+        <button id="prev" class="btn btn-primary" onclick="goPrevious()">Previous</button>
+        <span id="page-num">Page 1</span>
+        <button id="next" class="btn btn-primary" onclick="goNext()">Next</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+
+<script>
+  
+    var url = "{{current_host}}{{pdf.pdf_file.url}}";
+   
+    var pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null;
+
+    
+    var scale = 2.5; 
+
+ 
+    pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        document.getElementById('page-num').textContent = 'Page ' + pageNum;
+        renderPage(pageNum);
+    }).catch(function(error) {
+        console.error("Error loading PDF: ", error);
+    });
+
+    
+    function renderPage(num) {
+        pageRendering = true;
+
+       
+        pdfDoc.getPage(num).then(function(page) {
+            var canvas = document.getElementById('pdf-canvas');
+            var ctx = canvas.getContext('2d');
+            var viewport = page.getViewport({ scale: scale });  
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            
+            var renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            var renderTask = page.render(renderContext);
+
+            
+            renderTask.promise.then(function() {
+                pageRendering = false;
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
+        });
+
+      
+        document.getElementById('page-num').textContent = 'Page ' + num;
+    }
+
+   
+    function goNext() {
+        if (pageNum < pdfDoc.numPages) {
+            pageNum++;
+            renderPage(pageNum);
+        }
+    }
+
+   
+    function goPrevious() {
+        if (pageNum > 1) {
+            pageNum--;
+            renderPage(pageNum);
+        }
+    }
+</script>
+{% endblock %}
+
+

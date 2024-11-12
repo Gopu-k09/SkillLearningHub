@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if user.is_authenticated %}
+        <h2>Welcome back, {{ user.username }}!</h2>
+        <p>Explore the latest articles and PDF documents in your learning journey.</p>
+
+        {% if user_role == "Admin" %}
+            <div class="alert alert-info">
+                <h4>Admin Portal</h4>
+                <ul>
+                    <li><a href="{% url 'admin:index' %}">Go to Admin Dashboard</a></li>
+                    <li><a href="{% url 'admin:auth_user_changelist' %}">Manage Users</a></li>
+                    <li><a href="{% url 'admin:courses_article_changelist' %}">Manage Articles</a></li>
+                    <li><a href="{% url 'admin:courses_pdfdocument_changelist' %}">Manage PDFs</a></li>
+                    <li><a href="{% url 'admin:auth_group_changelist' %}">Manage Groups</a></li>
+                </ul>
+            </div>
+        
+
+        {% elif user_role == "Editor" %}
+            <div class="alert alert-warning">
+                <h4>Editor Tools</h4>
+                <ul>
+                    <li><a href="{% url 'admin:courses_article_changelist' %}">Manage Articles</a></li>
+                    <li><a href="{% url 'admin:courses_pdfdocument_changelist' %}">Manage PDFs</a></li>
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Latest Articles</h4>
+                <ul>
+                    {% for article in articles %}
+                        <li><a href="{% url 'view_article' article.id %}">{{ article.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="col-md-6">
+                <h4>Latest PDFs</h4>
+                <ul>
+                    {% for pdf in pdfs %}
+                        <li><a href="{% url 'pdf_view' pdf.id %}">{{ pdf.title }}</a></li>
+
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+    {% else %}
+        <h2>Welcome to SkillLearningHub!</h2>
+        <p>Join our community to explore valuable learning resources like articles and PDFs.</p>
+        <p><a href="{% url 'register' %}" class="btn btn-primary">Create an Account</a></p>
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

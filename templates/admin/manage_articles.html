@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Manage Articles</h2>
+    <a href="{% url 'add_article' %}" class="btn btn-success mb-3">Add New Article</a>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Premium</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for article in articles %}
+                <tr>
+                    <td>{{ article.title }}</td>
+                    <td>{{ article.is_premium|yesno:"Yes,No" }}</td>
+                    <td>
+                        <a href="{% url 'edit_article' article.id %}" class="btn btn-primary btn-sm">Edit</a>
+                        <a href="{% url 'delete_article' article.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

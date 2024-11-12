@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Articles</h2>
+<div class="row">
+    {% for article in articles %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.content|truncatewords:20 }}</p>
+                    {% if article.is_premium %}
+                        {% if user.userprofile.is_premium %}
+                            <a href="#" class="btn btn-primary">Read More</a>
+                        {% else %}
+                            <a href="{% url 'apply_coupon' %}" class="btn btn-warning">Upgrade for Access</a>
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'view_article' article.id %}"class="btn btn-primary">Read More</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
