@@ -1,2 +1,2 @@
 # SkillLearningHub
- eLearning Platform
+ E-Learning Platform
