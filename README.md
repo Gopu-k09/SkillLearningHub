@@ -1,2 +1,2 @@
-# SkillLearningHub
- E - Learning Platform 
+#SkillLearningHub
+ E-Learning Platform 
